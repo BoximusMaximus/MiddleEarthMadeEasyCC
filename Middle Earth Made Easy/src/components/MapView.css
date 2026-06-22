@@ -61,6 +61,32 @@
   outline: none;
 }
 
-.leaflet-container.placement-mode {
+.leaflet-container.placement-mode,
+.leaflet-container.measure-mode {
   cursor: crosshair !important;
+}
+
+.leaflet-marker-icon.measure-label-icon {
+  overflow: visible !important;
+  background: none !important;
+  border: none !important;
+}
+
+.measure-label {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  transform: translateX(-50%);
+  background: rgba(12, 8, 4, 0.93);
+  color: #c8a96e;
+  font-family: 'Uncial Antiqua', Georgia, serif;
+  font-size: 13px;
+  font-weight: normal;
+  padding: 5px 14px;
+  border-radius: 3px;
+  border: 1px solid #8b6914;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+  pointer-events: none;
+  letter-spacing: 0.03em;
 }

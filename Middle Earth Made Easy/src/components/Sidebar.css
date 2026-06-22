@@ -248,6 +248,132 @@
   text-transform: capitalize;
 }
 
+/* Measure / path tool */
+.measure-controls { margin-top: 0.45rem; }
+
+.measure-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.3rem 0;
+}
+.measure-point-count {
+  font-family: sans-serif;
+  font-size: 0.76rem;
+  color: #7a6040;
+}
+.measure-miles-active {
+  font-family: var(--font-medieval);
+  color: var(--ink-gold);
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+}
+
+.measure-actions {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 0.4rem;
+}
+.btn-measure-action {
+  flex: 1;
+  background: none;
+  border: 1px solid #4a3510;
+  color: #7a6040;
+  border-radius: 3px;
+  padding: 0.3rem 0.5rem;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+.btn-measure-action:hover { border-color: var(--ink-gold); color: var(--ink-gold); }
+
+.path-save-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.path-save-form input {
+  background: #1e1609;
+  border: 1px solid #4a3510;
+  border-radius: 3px;
+  color: #e8d5a3;
+  font-family: sans-serif;
+  font-size: 0.85rem;
+  padding: 0.45rem 0.65rem;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+}
+.path-save-form input:focus { border-color: var(--ink-gold); }
+.path-save-form .btn-save { width: 100%; }
+
+/* Saved path list */
+.sidebar-paths { flex-shrink: 0; }
+.path-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  max-height: 180px;
+  overflow-y: auto;
+}
+.path-item {
+  padding: 0.4rem 0.5rem;
+  border-radius: 3px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background 0.1s, border-color 0.1s;
+}
+.path-item:hover { background: #1e1609; border-color: #3a2a0a; }
+.path-item.selected { background: #1e1609; border-color: var(--ink-dark); }
+
+.path-item-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+}
+.path-item-name {
+  font-family: sans-serif;
+  font-size: 0.83rem;
+  color: #e8d5a3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+.path-item-dist {
+  font-family: var(--font-medieval);
+  font-size: 0.78rem;
+  color: var(--ink-gold);
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
+}
+.path-item-sub {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.18rem;
+}
+.path-item-points {
+  font-size: 0.7rem;
+  color: #7a6040;
+}
+.btn-path-delete {
+  background: none;
+  border: none;
+  color: #7a2020;
+  cursor: pointer;
+  font-size: 0.75rem;
+  padding: 0;
+  line-height: 1;
+  transition: color 0.15s;
+}
+.btn-path-delete:hover { color: #cc5555; }
+
 /* Location info panel */
 .location-info-header {
   display: flex;

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../utils/supabase'
 import { useAuth } from '../context/AuthContext'
@@ -6,17 +6,34 @@ import MapView from '../components/MapView'
 import Sidebar from '../components/Sidebar'
 import './MapPage.css'
 
+const MILES_PER_PIXEL = 0.25
+
+function pathMiles(points) {
+  let total = 0
+  for (let i = 1; i < points.length; i++) {
+    const dx = points[i].x - points[i - 1].x
+    const dy = points[i].y - points[i - 1].y
+    total += Math.sqrt(dx * dx + dy * dy)
+  }
+  return total * MILES_PER_PIXEL
+}
+
 export default function MapPage() {
   const { user } = useAuth()
   const navigate = useNavigate()
-  const [pins, setPins]                     = useState([])
-  const [locations, setLocations]           = useState([])
-  const [placementMode, setPlacementMode]   = useState(false)
-  const [selectedPin, setSelectedPin]       = useState(null)
+  const [pins, setPins]                         = useState([])
+  const [locations, setLocations]               = useState([])
+  const [placementMode, setPlacementMode]       = useState(false)
+  const [selectedPin, setSelectedPin]           = useState(null)
   const [selectedLocation, setSelectedLocation] = useState(null)
-  const [newPinPosition, setNewPinPosition] = useState(null)
+  const [newPinPosition, setNewPinPosition]     = useState(null)
+  const [measureMode, setMeasureMode]           = useState(false)
+  const [activePath, setActivePath]             = useState([])
+  const [savedPaths, setSavedPaths]             = useState([])
+  const [selectedPath, setSelectedPath]         = useState(null)
 
   const isAdmin = user?.app_metadata?.role === 'admin'
+  const activePathMiles = useMemo(() => pathMiles(activePath), [activePath])
 
   useEffect(() => {
     supabase.from('pins').select('*').then(({ data, error }) => {
@@ -25,6 +42,9 @@ export default function MapPage() {
     supabase.from('locations').select('*').then(({ data, error }) => {
       if (!error && data) setLocations(data)
     })
+    supabase.from('paths').select('*').order('created_at', { ascending: false }).then(({ data, error }) => {
+      if (!error && data) setSavedPaths(data)
+    })
   }, [])
 
   async function handleLogout() {
@@ -32,7 +52,30 @@ export default function MapPage() {
     navigate('/login')
   }
 
+  function handleToggleMeasure() {
+    setMeasureMode(m => {
+      if (!m) {
+        setPlacementMode(false)
+        setNewPinPosition(null)
+        setSelectedPin(null)
+        setSelectedLocation(null)
+      }
+      return !m
+    })
+  }
+
+  function handleTogglePlacement() {
+    setPlacementMode(m => !m)
+    setMeasureMode(false)
+  }
+
+  function addPathPoint(x, y) {
+    if (activePath.length >= 100) return
+    setActivePath(prev => [...prev, { x, y }])
+  }
+
   function handleMapClick(latlng) {
+    if (measureMode) { addPathPoint(latlng.lng, latlng.lat); return }
     setNewPinPosition(latlng)
     setSelectedPin(null)
     setSelectedLocation(null)
@@ -40,6 +83,7 @@ export default function MapPage() {
   }
 
   function handlePinClick(pin) {
+    if (measureMode) { addPathPoint(pin.x, pin.y); return }
     setSelectedPin(pin)
     setNewPinPosition(null)
     setSelectedLocation(null)
@@ -47,6 +91,7 @@ export default function MapPage() {
   }
 
   function handleLocationClick(loc) {
+    if (measureMode) { addPathPoint(loc.x, loc.y); return }
     setSelectedLocation(loc)
     setSelectedPin(null)
     setNewPinPosition(null)
@@ -60,6 +105,40 @@ export default function MapPage() {
 
   function handleLocationClose() {
     setSelectedLocation(null)
+  }
+
+  function handleUndoPoint() {
+    setActivePath(prev => prev.slice(0, -1))
+  }
+
+  function handleClearPath() {
+    setActivePath([])
+  }
+
+  async function handleSavePath(name) {
+    if (!user || activePath.length < 2) return 'Need at least 2 points'
+    const { data, error } = await supabase
+      .from('paths')
+      .insert({
+        user_id: user.id,
+        name,
+        points: activePath,
+        total_miles: parseFloat(activePathMiles.toFixed(2)),
+      })
+      .select()
+      .single()
+    if (error) return error.message
+    setSavedPaths(prev => [data, ...prev])
+    setActivePath([])
+    return null
+  }
+
+  async function handleDeletePath(pathId) {
+    const { error } = await supabase.from('paths').delete().eq('id', pathId)
+    if (error) return error.message
+    setSavedPaths(prev => prev.filter(p => p.id !== pathId))
+    if (selectedPath?.id === pathId) setSelectedPath(null)
+    return null
   }
 
   async function handleSave(fields) {
@@ -107,7 +186,7 @@ export default function MapPage() {
       <Sidebar
         pins={pins}
         placementMode={placementMode}
-        onTogglePlacement={() => setPlacementMode(m => !m)}
+        onTogglePlacement={handleTogglePlacement}
         selectedPin={selectedPin}
         newPinPosition={newPinPosition}
         selectedLocation={selectedLocation}
@@ -119,6 +198,17 @@ export default function MapPage() {
         userEmail={user?.email}
         onLogout={handleLogout}
         isAdmin={isAdmin}
+        measureMode={measureMode}
+        onToggleMeasure={handleToggleMeasure}
+        activePath={activePath}
+        activePathMiles={activePathMiles}
+        onUndoPoint={handleUndoPoint}
+        onClearPath={handleClearPath}
+        onSavePath={handleSavePath}
+        savedPaths={savedPaths}
+        selectedPath={selectedPath}
+        onSelectPath={setSelectedPath}
+        onDeletePath={handleDeletePath}
       />
       <MapView
         pins={pins}
@@ -130,6 +220,12 @@ export default function MapPage() {
         locations={locations}
         selectedLocation={selectedLocation}
         onLocationClick={handleLocationClick}
+        measureMode={measureMode}
+        activePath={activePath}
+        activePathMiles={activePathMiles}
+        savedPaths={savedPaths}
+        selectedPath={selectedPath}
+        onSelectPath={setSelectedPath}
       />
     </div>
   )
