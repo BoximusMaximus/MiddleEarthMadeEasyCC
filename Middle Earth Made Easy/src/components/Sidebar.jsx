@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import './Sidebar.css'
 
 const CATEGORIES = [
@@ -33,9 +34,9 @@ function PinDot({ category }) {
 
 export default function Sidebar({
   pins, placementMode, onTogglePlacement,
-  selectedPin, newPinPosition,
-  onPinSelect, onSave, onDelete, onClose,
-  userEmail, onLogout,
+  selectedPin, newPinPosition, selectedLocation,
+  onPinSelect, onSave, onDelete, onClose, onLocationClose,
+  userEmail, onLogout, isAdmin,
 }) {
   const [collapsed, setCollapsed] = useState(false)
   const [name, setName]         = useState('')
@@ -153,6 +154,32 @@ export default function Sidebar({
         </div>
       )}
 
+      {selectedLocation && !showForm && (
+        <div className="sidebar-section sidebar-location-info">
+          <div className="location-info-header">
+            <h3>{selectedLocation.name}</h3>
+            <button className="btn-close-info" onClick={onLocationClose} title="Close">✕</button>
+          </div>
+          <dl className="location-details">
+            {selectedLocation.realm && (
+              <><dt>Realm</dt><dd>{selectedLocation.realm}</dd></>
+            )}
+            {selectedLocation.location_type && (
+              <><dt>Type</dt><dd>{selectedLocation.location_type}</dd></>
+            )}
+            {selectedLocation.inhabitants?.length > 0 && (
+              <><dt>Inhabitants</dt><dd>{selectedLocation.inhabitants.join(', ')}</dd></>
+            )}
+            {selectedLocation.founded_date && (
+              <><dt>Founded</dt><dd>{selectedLocation.founded_date}</dd></>
+            )}
+          </dl>
+          {selectedLocation.description && (
+            <p className="location-description">{selectedLocation.description}</p>
+          )}
+        </div>
+      )}
+
       <div className="sidebar-section sidebar-pins">
         <h3>My Pins <span className="pin-count">({pins.length})</span></h3>
         {pins.length === 0 ? (
@@ -173,6 +200,11 @@ export default function Sidebar({
           </ul>
         )}
       </div>
+      {isAdmin && (
+        <div className="sidebar-section sidebar-admin-link">
+          <Link to="/admin" className="btn-admin-panel">⚙ Admin Panel</Link>
+        </div>
+      )}
     </div>
   )
 }

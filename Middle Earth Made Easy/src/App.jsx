@@ -3,6 +3,7 @@ import { AuthProvider, useAuth } from './context/AuthContext'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import MapPage from './pages/MapPage'
+import AdminPage from './pages/AdminPage'
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth()
@@ -16,6 +17,14 @@ function PublicRoute({ children }) {
   return user ? <Navigate to="/" replace /> : children
 }
 
+function AdminRoute({ children }) {
+  const { user, loading } = useAuth()
+  if (loading) return <div className="app-loading" />
+  if (!user) return <Navigate to="/login" replace />
+  if (user.app_metadata?.role !== 'admin') return <Navigate to="/" replace />
+  return children
+}
+
 export default function App() {
   return (
     <AuthProvider>
@@ -24,6 +33,7 @@ export default function App() {
           <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
           <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
           <Route path="/" element={<ProtectedRoute><MapPage /></ProtectedRoute>} />
+          <Route path="/admin" element={<AdminRoute><AdminPage /></AdminRoute>} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

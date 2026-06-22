@@ -20,6 +20,31 @@
   border-color: rgba(255, 255, 255, 0.7);
 }
 
+.location-pin {
+  border-radius: 0;
+  transform: rotate(45deg);
+  background: var(--loc-color, #ffd700);
+  border: 2px solid rgba(0, 0, 0, 0.6);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.5), 0 0 10px var(--loc-color, #ffd700);
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.location-pin:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.7), 0 0 18px var(--loc-color, #ffd700);
+}
+
+.location-pin.selected {
+  box-shadow: 0 0 14px rgba(0, 0, 0, 0.8), 0 0 26px var(--loc-color, #ffd700);
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+.leaflet-tooltip.location-label {
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.03em;
+}
+
 @keyframes pin-pulse {
   0%, 100% { box-shadow: 0 0 6px rgba(0,0,0,0.5), 0 0 10px #ffd700; }
   50%       { box-shadow: 0 0 12px rgba(0,0,0,0.5), 0 0 28px #ffd700, 0 0 44px rgba(255,215,0,0.4); }

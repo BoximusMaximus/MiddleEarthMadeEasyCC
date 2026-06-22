@@ -10,13 +10,20 @@ export default function MapPage() {
   const { user } = useAuth()
   const navigate = useNavigate()
   const [pins, setPins]                     = useState([])
+  const [locations, setLocations]           = useState([])
   const [placementMode, setPlacementMode]   = useState(false)
   const [selectedPin, setSelectedPin]       = useState(null)
+  const [selectedLocation, setSelectedLocation] = useState(null)
   const [newPinPosition, setNewPinPosition] = useState(null)
+
+  const isAdmin = user?.app_metadata?.role === 'admin'
 
   useEffect(() => {
     supabase.from('pins').select('*').then(({ data, error }) => {
       if (!error && data) setPins(data)
+    })
+    supabase.from('locations').select('*').then(({ data, error }) => {
+      if (!error && data) setLocations(data)
     })
   }, [])
 
@@ -28,11 +35,20 @@ export default function MapPage() {
   function handleMapClick(latlng) {
     setNewPinPosition(latlng)
     setSelectedPin(null)
+    setSelectedLocation(null)
     setPlacementMode(false)
   }
 
   function handlePinClick(pin) {
     setSelectedPin(pin)
+    setNewPinPosition(null)
+    setSelectedLocation(null)
+    setPlacementMode(false)
+  }
+
+  function handleLocationClick(loc) {
+    setSelectedLocation(loc)
+    setSelectedPin(null)
     setNewPinPosition(null)
     setPlacementMode(false)
   }
@@ -40,6 +56,10 @@ export default function MapPage() {
   function handleClose() {
     setSelectedPin(null)
     setNewPinPosition(null)
+  }
+
+  function handleLocationClose() {
+    setSelectedLocation(null)
   }
 
   async function handleSave(fields) {
@@ -90,12 +110,15 @@ export default function MapPage() {
         onTogglePlacement={() => setPlacementMode(m => !m)}
         selectedPin={selectedPin}
         newPinPosition={newPinPosition}
+        selectedLocation={selectedLocation}
         onPinSelect={handlePinClick}
         onSave={handleSave}
         onDelete={handleDelete}
         onClose={handleClose}
+        onLocationClose={handleLocationClose}
         userEmail={user?.email}
         onLogout={handleLogout}
+        isAdmin={isAdmin}
       />
       <MapView
         pins={pins}
@@ -104,6 +127,9 @@ export default function MapPage() {
         newPinPosition={newPinPosition}
         onMapClick={handleMapClick}
         onPinClick={handlePinClick}
+        locations={locations}
+        selectedLocation={selectedLocation}
+        onLocationClick={handleLocationClick}
       />
     </div>
   )

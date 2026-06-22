@@ -4,6 +4,7 @@ import 'leaflet/dist/leaflet.css'
 import './MapView.css'
 import middleEarthMap from '../assets/middle-earth-map.jpg'
 import PinMarker from './PinMarker'
+import LocationMarker from './LocationMarker'
 
 const IMAGE_WIDTH  = 10000
 const IMAGE_HEIGHT = 5455
@@ -28,7 +29,7 @@ function MapClickHandler({ onMapClick, placementMode }) {
   return null
 }
 
-export default function MapView({ pins, placementMode, selectedPin, newPinPosition, onMapClick, onPinClick }) {
+export default function MapView({ pins, placementMode, selectedPin, newPinPosition, onMapClick, onPinClick, locations = [], selectedLocation, onLocationClick }) {
   return (
     <MapContainer
       crs={L.CRS.Simple}
@@ -44,6 +45,14 @@ export default function MapView({ pins, placementMode, selectedPin, newPinPositi
       <ImageOverlay url={middleEarthMap} bounds={bounds} />
       <MapClickHandler onMapClick={onMapClick} placementMode={placementMode} />
       {newPinPosition && <PreviewPin latlng={newPinPosition} />}
+      {locations.map(loc => (
+        <LocationMarker
+          key={loc.id}
+          location={loc}
+          selected={selectedLocation?.id === loc.id}
+          onClick={() => onLocationClick?.(loc)}
+        />
+      ))}
       {pins.map(pin => (
         <PinMarker
           key={pin.id}
