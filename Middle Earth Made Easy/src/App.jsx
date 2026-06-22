@@ -6,13 +6,13 @@ import MapPage from './pages/MapPage'
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth()
-  if (loading) return null
+  if (loading) return <div className="app-loading" />
   return user ? children : <Navigate to="/login" replace />
 }
 
 function PublicRoute({ children }) {
   const { user, loading } = useAuth()
-  if (loading) return null
+  if (loading) return <div className="app-loading" />
   return user ? <Navigate to="/" replace /> : children
 }
 

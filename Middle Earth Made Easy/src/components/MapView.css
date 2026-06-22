@@ -2,19 +2,41 @@
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: var(--pin-color, #c8a96e);
+  background: var(--pin-color, #e8e8e8);
   border: 2px solid rgba(0, 0, 0, 0.5);
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.6), 0 0 10px var(--pin-color, #c8a96e);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.6), 0 0 10px var(--pin-color, #e8e8e8);
   cursor: pointer;
   transition: transform 0.1s, box-shadow 0.1s;
 }
 
 .map-pin:hover {
   transform: scale(1.25);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.8), 0 0 16px var(--pin-color, #c8a96e);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.8), 0 0 16px var(--pin-color, #e8e8e8);
 }
 
-/* Remove default Leaflet focus outline on container */
+.map-pin.selected {
+  transform: scale(1.4);
+  box-shadow: 0 0 14px rgba(0, 0, 0, 0.8), 0 0 22px var(--pin-color, #e8e8e8);
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+@keyframes pin-pulse {
+  0%, 100% { box-shadow: 0 0 6px rgba(0,0,0,0.5), 0 0 10px #ffd700; }
+  50%       { box-shadow: 0 0 12px rgba(0,0,0,0.5), 0 0 28px #ffd700, 0 0 44px rgba(255,215,0,0.4); }
+}
+
+.map-pin.preview {
+  background: #ffd700;
+  border: 2px dashed rgba(255, 215, 0, 0.9);
+  box-shadow: 0 0 10px #ffd700;
+  animation: pin-pulse 1.1s ease-in-out infinite;
+  cursor: default;
+}
+
 .leaflet-container:focus {
   outline: none;
+}
+
+.leaflet-container.placement-mode {
+  cursor: crosshair !important;
 }

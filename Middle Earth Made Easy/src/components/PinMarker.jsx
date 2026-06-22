@@ -2,30 +2,31 @@ import { Marker } from 'react-leaflet'
 import L from 'leaflet'
 
 const CATEGORY_COLORS = {
-  general:  '#c8a96e',
-  shire:    '#7bc67e',
-  elvish:   '#a8d8ea',
-  dwarven:  '#c97b3c',
-  mordor:   '#cc3333',
-  gondor:   '#c0c0c0',
-  rohan:    '#d4af37',
+  elven:  '#4a9e4a',
+  human:  '#e8e8e8',
+  orc:    '#cc3333',
+  dwarf:  '#8a8070',
+  hobbit: '#5b8dd9',
+  goblin: '#c8c820',
+  beast:  '#e07820',
 }
 
-function createPinIcon(category) {
-  const color = CATEGORY_COLORS[category] ?? CATEGORY_COLORS.general
+function createPinIcon(category, selected) {
+  const color = CATEGORY_COLORS[category] ?? CATEGORY_COLORS.human
+  const cls = selected ? 'map-pin selected' : 'map-pin'
   return L.divIcon({
     className: '',
-    html: `<div class="map-pin" style="--pin-color:${color}"></div>`,
+    html: `<div class="${cls}" style="--pin-color:${color}"></div>`,
     iconSize: [22, 22],
     iconAnchor: [11, 11],
   })
 }
 
-export default function PinMarker({ pin, onClick }) {
+export default function PinMarker({ pin, selected, onClick }) {
   return (
     <Marker
       position={[pin.y, pin.x]}
-      icon={createPinIcon(pin.category)}
+      icon={createPinIcon(pin.category, selected)}
       eventHandlers={{ click: onClick }}
     />
   )
