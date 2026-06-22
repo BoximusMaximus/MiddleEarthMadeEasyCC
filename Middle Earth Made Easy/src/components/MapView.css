@@ -33,6 +33,24 @@
   cursor: default;
 }
 
+.leaflet-tooltip.pin-label-tooltip {
+  background: rgba(12, 8, 4, 0.85);
+  color: #e8d5a0;
+  font-size: 10px;
+  font-family: Georgia, 'Palatino Linotype', serif;
+  font-weight: normal;
+  padding: 2px 7px;
+  border-radius: 3px;
+  border: 1px solid rgba(200, 165, 80, 0.4);
+  white-space: nowrap;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.7);
+  letter-spacing: 0.02em;
+}
+
+.leaflet-tooltip.pin-label-tooltip::before {
+  display: none;
+}
+
 .leaflet-container:focus {
   outline: none;
 }

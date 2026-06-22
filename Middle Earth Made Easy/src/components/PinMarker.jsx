@@ -1,4 +1,4 @@
-import { Marker } from 'react-leaflet'
+import { Marker, Tooltip } from 'react-leaflet'
 import L from 'leaflet'
 
 const CATEGORY_COLORS = {
@@ -28,6 +28,10 @@ export default function PinMarker({ pin, selected, onClick }) {
       position={[pin.y, pin.x]}
       icon={createPinIcon(pin.category, selected)}
       eventHandlers={{ click: onClick }}
-    />
+    >
+      <Tooltip permanent direction="top" offset={[0, -11]} className="pin-label-tooltip">
+        {pin.name}
+      </Tooltip>
+    </Marker>
   )
 }
