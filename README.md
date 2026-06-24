@@ -1,8 +1,8 @@
 # Middle Earth Made Easy
 
-An interactive, full-stack web application built on top of a high-resolution Middle Earth map. Registered users can place personal pins, measure distances between any two points, and save named travel routes. Administrators can add permanent lore locations visible to all users.
+An interactive, full-stack web application built on top of a high-resolution Middle Earth map. Registered users can place personal pins, measure distances between any two points, and save named travel routes. Administrators can add permanent lore locations visible to all users. Below are build instructions for those hoping to recreate this project.
 
-**Live demo:** *(add your Vercel URL here)*
+**Live demo:** *(to be implemented)*
 
 ---
 
@@ -30,7 +30,7 @@ An interactive, full-stack web application built on top of a high-resolution Mid
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/MiddleEarthMadeEasyCC.git
+git clone https://github.com/BoximusMaximus/MiddleEarthMadeEasyCC.git
 cd MiddleEarthMadeEasyCC
 ```
 
