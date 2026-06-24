@@ -1,3 +1,11 @@
+/* ============================================================
+   MapView — styles for the Leaflet map container and custom markers
+   ============================================================ */
+
+/* ── User pin markers ───────────────────────────────────────── */
+
+/* Base pin style — circular dot with a category-colored glow.
+   --pin-color is injected via JavaScript as an inline CSS variable on each pin div. */
 .map-pin {
   width: 22px;
   height: 22px;
@@ -9,23 +17,30 @@
   transition: transform 0.1s, box-shadow 0.1s;
 }
 
+/* Scale up and intensify the glow on mouse hover */
 .map-pin:hover {
   transform: scale(1.25);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.8), 0 0 16px var(--pin-color, #e8e8e8);
 }
 
+/* Further scale + white border ring when the pin is selected in the sidebar */
 .map-pin.selected {
   transform: scale(1.4);
   box-shadow: 0 0 14px rgba(0, 0, 0, 0.8), 0 0 22px var(--pin-color, #e8e8e8);
   border-color: rgba(255, 255, 255, 0.7);
 }
 
+/* Location name label — slightly bolder than pin labels */
 .leaflet-tooltip.location-label {
   font-weight: 600;
   font-size: 11px;
   letter-spacing: 0.03em;
 }
 
+/* ── Preview pin animation ──────────────────────────────────── */
+
+/* Pulsing gold glow: shown while the user has clicked to place a pin
+   but hasn't filled in the name form yet */
 @keyframes pin-pulse {
   0%, 100% { box-shadow: 0 0 6px rgba(0,0,0,0.5), 0 0 10px #ffd700; }
   50%       { box-shadow: 0 0 12px rgba(0,0,0,0.5), 0 0 28px #ffd700, 0 0 44px rgba(255,215,0,0.4); }
@@ -39,6 +54,9 @@
   cursor: default;
 }
 
+/* ── Tooltip on user pins ───────────────────────────────────── */
+
+/* Overrides Leaflet's default white tooltip with the project's dark parchment styling */
 .leaflet-tooltip.pin-label-tooltip {
   background: rgba(12, 8, 4, 0.85);
   color: #e8d5a0;
@@ -53,25 +71,38 @@
   letter-spacing: 0.02em;
 }
 
+/* Hide the arrow tip that Leaflet normally draws on tooltips */
 .leaflet-tooltip.pin-label-tooltip::before {
   display: none;
 }
 
+/* Remove the browser's default focus ring on the map container */
 .leaflet-container:focus {
   outline: none;
 }
 
+/* ── Map cursor modes ───────────────────────────────────────── */
+
+/* Crosshair cursor signals to the user that map clicks will place something */
 .leaflet-container.placement-mode,
 .leaflet-container.measure-mode {
   cursor: crosshair !important;
 }
 
+/* ── Distance label marker ──────────────────────────────────── */
+
+/* The Leaflet icon container for the distance label.
+   overflow: visible is critical — without it, the absolutely-positioned
+   .measure-label div would be clipped to the 120×32px icon bounds and not be visible. */
 .leaflet-marker-icon.measure-label-icon {
   overflow: visible !important;
   background: none !important;
   border: none !important;
 }
 
+/* The actual distance label bubble, positioned above the last waypoint.
+   bottom: calc(100% + 8px) places it 8px above the icon container's top edge.
+   left: 50% + translateX(-50%) centers it horizontally over the waypoint. */
 .measure-label {
   position: absolute;
   left: 50%;
@@ -87,6 +118,6 @@
   border: 1px solid #8b6914;
   white-space: nowrap;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
-  pointer-events: none;
+  pointer-events: none;  /* Label must not block map click events beneath it */
   letter-spacing: 0.03em;
 }

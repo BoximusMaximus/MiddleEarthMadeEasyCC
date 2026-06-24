@@ -1,6 +1,12 @@
+// ⚠️  LEGACY — This component is no longer used anywhere in the app.
+// It was the original modal-overlay approach for editing pins.
+// The current implementation uses an inline form in Sidebar.jsx instead.
+// Kept for reference; safe to delete if the project is cleaned up.
 import { useState } from 'react'
 import './PinModal.css'
 
+// The old category list used region-based names (Shire, Gondor, Mordor…)
+// The current app uses race-based categories (hobbit, human, orc…)
 const CATEGORIES = [
   { value: 'general', label: 'General' },
   { value: 'shire',   label: 'The Shire' },
@@ -11,6 +17,7 @@ const CATEGORIES = [
   { value: 'mordor',  label: 'Mordor' },
 ]
 
+// Props: pin (existing pin object or null for new), onSave, onDelete, onClose (callbacks)
 export default function PinModal({ pin, onSave, onDelete, onClose }) {
   const [name, setName]         = useState(pin?.name ?? '')
   const [note, setNote]         = useState(pin?.note ?? '')
@@ -18,6 +25,7 @@ export default function PinModal({ pin, onSave, onDelete, onClose }) {
   const [error, setError]       = useState(null)
   const [saving, setSaving]     = useState(false)
 
+  // Calls the parent's onSave with form data; surfaces any returned error
   async function handleSubmit(e) {
     e.preventDefault()
     setSaving(true)
@@ -36,7 +44,9 @@ export default function PinModal({ pin, onSave, onDelete, onClose }) {
   }
 
   return (
+    // Clicking the dark overlay (outside the modal) closes it
     <div className="pin-modal-overlay" onClick={onClose}>
+      {/* stopPropagation prevents clicks inside the modal from closing it */}
       <div className="pin-modal" onClick={e => e.stopPropagation()}>
         <h2>{pin ? 'Edit Location' : 'New Location'}</h2>
         <form onSubmit={handleSubmit}>

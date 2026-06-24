@@ -1,21 +1,32 @@
+/* ============================================================
+   Sidebar — left panel styles
+   The sidebar is a fixed-width flex column. Each section is a
+   .sidebar-section div with padding and a bottom border divider.
+   ============================================================ */
+
+/* ── Sidebar container ──────────────────────────────────────── */
+
 .sidebar {
   width: 280px;
-  flex-shrink: 0;
+  flex-shrink: 0;           /* Never shrink below 280px — the map takes remaining space */
   background: #120e05;
   border-right: 1px solid #4a3510;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
+  overflow-y: auto;         /* Sidebar content scrolls independently of the map */
   z-index: 1000;
   color: #e8d5a3;
 }
 
+/* Collapsed state: narrow strip with only the expand arrow visible */
 .sidebar-collapsed {
   width: 40px;
   overflow: hidden;
   align-items: center;
   padding-top: 0.5rem;
 }
+
+/* ── Header ─────────────────────────────────────────────────── */
 
 .sidebar-header {
   display: flex;
@@ -26,6 +37,7 @@
   flex-shrink: 0;
 }
 
+/* "Middle Earth" title in the medieval font */
 .sidebar-title {
   font-family: var(--font-medieval);
   color: var(--ink-gold);
@@ -33,6 +45,7 @@
   letter-spacing: 0.04em;
 }
 
+/* Arrow button to collapse/expand the sidebar */
 .sidebar-toggle {
   background: none;
   border: none;
@@ -45,6 +58,8 @@
 }
 .sidebar-toggle:hover { color: var(--ink-gold); }
 
+/* ── User info row ───────────────────────────────────────────── */
+
 .sidebar-user {
   display: flex;
   align-items: center;
@@ -53,6 +68,8 @@
   border-bottom: 1px solid #2a1f0a;
   flex-shrink: 0;
 }
+
+/* Truncates long email addresses with ellipsis */
 .sidebar-email {
   flex: 1;
   color: #7a6040;
@@ -62,6 +79,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
 .sidebar-logout {
   background: none;
   border: 1px solid #4a3510;
@@ -75,6 +93,9 @@
 }
 .sidebar-logout:hover { border-color: #7a6040; color: #a08050; }
 
+/* ── Generic section wrapper ────────────────────────────────── */
+
+/* Each logical block of sidebar content uses this class */
 .sidebar-section {
   padding: 0.75rem 1rem;
   border-bottom: 1px solid #2a1f0a;
@@ -88,7 +109,8 @@
   margin-bottom: 0.5rem;
 }
 
-/* Place pin button */
+/* ── Place pin / Measure distance toggle button ─────────────── */
+
 .btn-place-pin {
   width: 100%;
   padding: 0.6rem;
@@ -102,12 +124,15 @@
   transition: background 0.15s, border-color 0.15s;
 }
 .btn-place-pin:hover { background: #2a1f09; border-color: var(--ink-gold); }
+
+/* Orange active state when placement or measure mode is on */
 .btn-place-pin.active {
   background: #2a1609;
   border-color: #cc7722;
   color: #e09040;
 }
 
+/* Instructional helper text shown below the toggle */
 .placement-hint {
   font-size: 0.76rem;
   color: #7a6040;
@@ -116,13 +141,15 @@
   line-height: 1.4;
 }
 
-/* Inline pin form */
+/* ── Inline pin edit form ────────────────────────────────────── */
+
 .sidebar-form form {
   display: flex;
   flex-direction: column;
   gap: 0.55rem;
 }
 
+/* Shared input styles for name, category, and notes fields */
 .sidebar-form input,
 .sidebar-form select,
 .sidebar-form textarea {
@@ -144,12 +171,14 @@
 .sidebar-form textarea:focus { border-color: var(--ink-gold); }
 .sidebar-form select option { background: #1e1609; }
 
+/* Inline error text from Supabase (e.g. network error, validation failure) */
 .form-error {
   color: #e07070;
   font-size: 0.78rem;
   font-family: sans-serif;
 }
 
+/* Row of action buttons at the bottom of the form */
 .form-actions {
   display: flex;
   gap: 0.4rem;
@@ -165,6 +194,7 @@
   border: 1px solid transparent;
 }
 
+/* Primary save: gold border, inverts on hover */
 .btn-save {
   background: var(--ink-dark);
   border-color: var(--ink-gold) !important;
@@ -172,6 +202,7 @@
 }
 .btn-save:hover:not(:disabled) { background: var(--ink-gold); color: #120e05; }
 
+/* Neutral cancel */
 .btn-cancel {
   background: transparent;
   border-color: #4a3510 !important;
@@ -179,6 +210,7 @@
 }
 .btn-cancel:hover:not(:disabled) { border-color: #7a6040 !important; color: #a08050; }
 
+/* Destructive delete — fixed width, doesn't flex-grow */
 .btn-delete {
   background: transparent;
   border-color: #7a2020 !important;
@@ -189,9 +221,12 @@
 
 .form-actions button:disabled { opacity: 0.5; cursor: not-allowed; }
 
-/* Pin list */
+/* ── Pin list ────────────────────────────────────────────────── */
+
+/* flex: 1 lets the pin list fill any remaining sidebar height */
 .sidebar-pins { flex: 1; overflow-y: auto; }
 
+/* Pin/path count in parentheses next to section headings */
 .pin-count { color: #7a6040; font-size: 0.78rem; }
 
 .no-pins {
@@ -210,6 +245,7 @@
   gap: 0.25rem;
 }
 
+/* Individual pin row: clickable, highlights on hover and selection */
 .pin-item {
   display: flex;
   align-items: center;
@@ -223,6 +259,7 @@
 .pin-item:hover { background: #1e1609; border-color: #3a2a0a; }
 .pin-item.selected { background: #1e1609; border-color: var(--ink-dark); }
 
+/* Colored circle dot showing the pin's category color */
 .pin-dot {
   width: 10px;
   height: 10px;
@@ -231,6 +268,7 @@
   border: 1px solid rgba(0, 0, 0, 0.4);
 }
 
+/* Pin name — truncates long names with ellipsis */
 .pin-item-name {
   flex: 1;
   font-family: sans-serif;
@@ -241,6 +279,7 @@
   white-space: nowrap;
 }
 
+/* Category label on the right side of the pin row */
 .pin-item-category {
   font-size: 0.7rem;
   color: #7a6040;
@@ -248,20 +287,26 @@
   text-transform: capitalize;
 }
 
-/* Measure / path tool */
+/* ── Measure distance controls ───────────────────────────────── */
+
 .measure-controls { margin-top: 0.45rem; }
 
+/* Row showing point count (left) and running distance (right) */
 .measure-status {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0.3rem 0;
 }
+
+/* "X / 100 pts" label in muted text */
 .measure-point-count {
   font-family: sans-serif;
   font-size: 0.76rem;
   color: #7a6040;
 }
+
+/* Running distance — gold medieval font for thematic consistency */
 .measure-miles-active {
   font-family: var(--font-medieval);
   color: var(--ink-gold);
@@ -269,11 +314,14 @@
   letter-spacing: 0.04em;
 }
 
+/* Row of Undo / Clear buttons */
 .measure-actions {
   display: flex;
   gap: 0.4rem;
   margin-bottom: 0.4rem;
 }
+
+/* Small muted action buttons — border and text turn gold on hover */
 .btn-measure-action {
   flex: 1;
   background: none;
@@ -287,11 +335,15 @@
 }
 .btn-measure-action:hover { border-color: var(--ink-gold); color: var(--ink-gold); }
 
+/* ── Path save form (inside measure mode) ───────────────────── */
+
 .path-save-form {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
 }
+
+/* Name input for saving the current path */
 .path-save-form input {
   background: #1e1609;
   border: 1px solid #4a3510;
@@ -306,10 +358,15 @@
   transition: border-color 0.15s;
 }
 .path-save-form input:focus { border-color: var(--ink-gold); }
+
+/* Reuses .btn-save but stretched to full width */
 .path-save-form .btn-save { width: 100%; }
 
-/* Saved path list */
+/* ── Saved path list ─────────────────────────────────────────── */
+
 .sidebar-paths { flex-shrink: 0; }
+
+/* max-height + overflow-y prevents the list from pushing other sidebar sections off-screen */
 .path-list {
   list-style: none;
   padding: 0;
@@ -320,6 +377,8 @@
   max-height: 180px;
   overflow-y: auto;
 }
+
+/* Clickable path row — same hover/selected pattern as pin rows */
 .path-item {
   padding: 0.4rem 0.5rem;
   border-radius: 3px;
@@ -330,12 +389,15 @@
 .path-item:hover { background: #1e1609; border-color: #3a2a0a; }
 .path-item.selected { background: #1e1609; border-color: var(--ink-dark); }
 
+/* Top row of each path item: name + distance */
 .path-item-main {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.4rem;
 }
+
+/* Path name — truncates with ellipsis */
 .path-item-name {
   font-family: sans-serif;
   font-size: 0.83rem;
@@ -345,6 +407,8 @@
   white-space: nowrap;
   flex: 1;
 }
+
+/* Distance in medieval gold font */
 .path-item-dist {
   font-family: var(--font-medieval);
   font-size: 0.78rem;
@@ -352,16 +416,22 @@
   flex-shrink: 0;
   letter-spacing: 0.02em;
 }
+
+/* Bottom row: point count (left) + delete button (right) */
 .path-item-sub {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-top: 0.18rem;
 }
+
+/* "X pts" label in muted text */
 .path-item-points {
   font-size: 0.7rem;
   color: #7a6040;
 }
+
+/* Small inline delete button — turns red on hover */
 .btn-path-delete {
   background: none;
   border: none;
@@ -374,7 +444,9 @@
 }
 .btn-path-delete:hover { color: #cc5555; }
 
-/* Location info panel */
+/* ── Location info panel ─────────────────────────────────────── */
+
+/* Header row: location name (left) + close button (right) */
 .location-info-header {
   display: flex;
   justify-content: space-between;
@@ -383,6 +455,7 @@
 }
 .location-info-header h3 { margin-bottom: 0 !important; font-size: 0.95rem; }
 
+/* X button to dismiss the location info */
 .btn-close-info {
   background: none;
   border: none;
@@ -396,6 +469,7 @@
 }
 .btn-close-info:hover { color: #e8d5a3; }
 
+/* Two-column grid for the lore metadata (Realm, Type, Inhabitants, Founded) */
 .location-details {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -407,6 +481,7 @@
 .location-details dt { color: #7a6040; font-weight: normal; }
 .location-details dd { color: #e8d5a3; margin: 0; }
 
+/* Optional description paragraph below the metadata grid */
 .location-description {
   margin-top: 0.6rem;
   font-family: sans-serif;
@@ -416,8 +491,12 @@
   font-style: italic;
 }
 
-/* Admin link */
+/* ── Admin panel link ────────────────────────────────────────── */
+
+/* Pushed to the bottom of the sidebar with margin-top: auto */
 .sidebar-admin-link { flex-shrink: 0; margin-top: auto; }
+
+/* Styled as a full-width muted button — gold on hover */
 .btn-admin-panel {
   display: block;
   width: 100%;

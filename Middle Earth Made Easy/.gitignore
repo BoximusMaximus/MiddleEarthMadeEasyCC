@@ -25,6 +25,7 @@ dist-ssr
 *.sw?
 
 prompt.md
+script.md
 .agents
 .claude
 skills-lock.json*

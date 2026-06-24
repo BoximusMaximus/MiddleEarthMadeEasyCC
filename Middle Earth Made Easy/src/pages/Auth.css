@@ -1,3 +1,9 @@
+/* ============================================================
+   Auth pages (Login + Register) — shared styles
+   Both pages use the same auth-container / auth-card layout.
+   ============================================================ */
+
+/* Full-viewport centered layout with a subtle radial gradient background */
 .auth-container {
   width: 100vw;
   height: 100vh;
@@ -10,6 +16,7 @@
     radial-gradient(ellipse at 70% 80%, rgba(139, 105, 20, 0.05) 0%, transparent 60%);
 }
 
+/* The centered card that contains the form */
 .auth-card {
   background: #120e05;
   border: 1px solid var(--ink-dark);
@@ -17,12 +24,13 @@
   padding: 2.5rem 3rem;
   width: 100%;
   max-width: 400px;
-  box-shadow: 0 0 40px rgba(200, 169, 110, 0.08);
+  box-shadow: 0 0 40px rgba(200, 169, 110, 0.08); /* Very subtle gold glow */
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
+/* App name — smaller, slightly faded, above the page title */
 .auth-card h1 {
   font-family: var(--font-medieval);
   color: var(--ink-gold);
@@ -32,6 +40,7 @@
   opacity: 0.7;
 }
 
+/* Page title ("Enter the Realm", "Join the Fellowship") */
 .auth-card h2 {
   font-family: var(--font-medieval);
   color: var(--ink-gold);
@@ -40,11 +49,14 @@
   margin-bottom: 0.5rem;
 }
 
+/* Stacked form layout with even spacing between fields */
 .auth-card form {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
 }
+
+/* ── Form inputs ──────────────────────────────────────────── */
 
 .auth-card input {
   background: #1e1609;
@@ -59,12 +71,14 @@
 }
 
 .auth-card input:focus {
-  border-color: var(--ink-gold);
+  border-color: var(--ink-gold); /* Gold border highlight on focus */
 }
 
 .auth-card input::placeholder {
-  color: #5a4520;
+  color: #5a4520; /* Muted placeholder so it doesn't compete with input text */
 }
+
+/* ── Submit button ─────────────────────────────────────────── */
 
 .auth-card button[type="submit"] {
   margin-top: 0.25rem;
@@ -80,6 +94,7 @@
   letter-spacing: 0.05em;
 }
 
+/* Inverted color on hover — gold background with dark text */
 .auth-card button[type="submit"]:hover:not(:disabled) {
   background: var(--ink-gold);
   color: #120e05;
@@ -90,12 +105,16 @@
   cursor: not-allowed;
 }
 
+/* ── Error message ─────────────────────────────────────────── */
+
 .auth-error {
   color: #e07070;
   font-size: 0.85rem;
   font-family: sans-serif;
   text-align: center;
 }
+
+/* ── Footer link ("New to Middle Earth? Register") ─────────── */
 
 .auth-card > p {
   text-align: center;
@@ -112,6 +131,8 @@
 .auth-card > p a:hover {
   text-decoration: underline;
 }
+
+/* ── Email confirmation message (shown after successful signUp) ── */
 
 .auth-confirm-msg {
   color: #c8b580;

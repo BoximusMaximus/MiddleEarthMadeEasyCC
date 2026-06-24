@@ -1,7 +1,12 @@
+// Sidebar — the left panel of the map application.
+// A presentational component: all data and event handlers come in as props from MapPage.
+// Sections rendered (in order): header, user info, place-pin toggle, measure-distance tool,
+// saved paths list, pin edit form, location info panel, pin list, admin link.
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import './Sidebar.css'
 
+// Categories for the pin placement form — drives the <select> dropdown
 const CATEGORIES = [
   { value: 'elven',  label: 'Elven' },
   { value: 'human',  label: 'Human' },
@@ -12,6 +17,8 @@ const CATEGORIES = [
   { value: 'beast',  label: 'Beast' },
 ]
 
+// Exported so other files (AdminPage, LocationMarker) can reuse the same color palette
+// without duplicating it. Keeps the color system consistent across the app.
 export const CATEGORY_COLORS = {
   elven:  '#4a9e4a',
   human:  '#e8e8e8',
@@ -22,6 +29,7 @@ export const CATEGORY_COLORS = {
   beast:  '#e07820',
 }
 
+// Small colored circle shown next to each pin in the pin list
 function PinDot({ category }) {
   const color = CATEGORY_COLORS[category] ?? CATEGORY_COLORS.human
   return (
@@ -33,26 +41,39 @@ function PinDot({ category }) {
 }
 
 export default function Sidebar({
+  // Pin data and placement mode
   pins, placementMode, onTogglePlacement,
   selectedPin, newPinPosition, selectedLocation,
   onPinSelect, onSave, onDelete, onClose, onLocationClose,
+  // User info
   userEmail, onLogout, isAdmin,
+  // Measure distance tool
   measureMode, onToggleMeasure,
   activePath, activePathMiles, onUndoPoint, onClearPath, onSavePath,
+  // Saved paths
   savedPaths, selectedPath, onSelectPath, onDeletePath,
 }) {
-  const [collapsed, setCollapsed]     = useState(false)
-  const [name, setName]               = useState('')
-  const [note, setNote]               = useState('')
-  const [category, setCategory]       = useState('human')
-  const [error, setError]             = useState(null)
-  const [saving, setSaving]           = useState(false)
-  const [pathName, setPathName]       = useState('')
-  const [pathSaveError, setPathSaveError] = useState(null)
-  const [pathSaving, setPathSaving]   = useState(false)
+  // collapsed: true collapses the sidebar to a narrow strip with only a toggle arrow
+  const [collapsed, setCollapsed] = useState(false)
 
+  // Pin form fields — controlled inputs
+  const [name, setName]         = useState('')
+  const [note, setNote]         = useState('')
+  const [category, setCategory] = useState('human')
+  const [error, setError]       = useState(null)
+  const [saving, setSaving]     = useState(false)
+
+  // Path save form fields
+  const [pathName, setPathName]           = useState('')
+  const [pathSaveError, setPathSaveError] = useState(null)
+  const [pathSaving, setPathSaving]       = useState(false)
+
+  // showForm: true when a pin is selected for editing OR a new map position has been clicked
   const showForm = selectedPin !== null || newPinPosition !== null
 
+  // ── Sync pin form when selection changes ──────────────────────────────────
+  // Pre-fills the form with the selected pin's data for editing,
+  // or resets all fields when a new position is clicked.
   useEffect(() => {
     if (selectedPin) {
       setName(selectedPin.name)
@@ -66,15 +87,18 @@ export default function Sidebar({
     setError(null)
   }, [selectedPin, newPinPosition])
 
+  // ── Pin form submission ───────────────────────────────────────────────────
   async function handleSubmit(e) {
     e.preventDefault()
     setSaving(true)
     setError(null)
+    // onSave handles both insert (newPinPosition) and update (selectedPin) in MapPage
     const err = await onSave({ name, note, category })
     setSaving(false)
     if (err) setError(err)
   }
 
+  // ── Pin delete ────────────────────────────────────────────────────────────
   async function handleDelete() {
     if (!confirm(`Delete "${selectedPin.name}"?`)) return
     setSaving(true)
@@ -83,6 +107,8 @@ export default function Sidebar({
     if (err) setError(err)
   }
 
+  // ── Path save submission ──────────────────────────────────────────────────
+  // Calls onSavePath in MapPage, then clears the name input on success
   async function handleSavePathSubmit(e) {
     e.preventDefault()
     if (!pathName.trim()) return
@@ -97,6 +123,8 @@ export default function Sidebar({
     }
   }
 
+  // ── Collapsed state ───────────────────────────────────────────────────────
+  // Collapsed sidebar: only a narrow strip with an expand arrow to reclaim map space
   if (collapsed) {
     return (
       <div className="sidebar sidebar-collapsed">
@@ -109,6 +137,8 @@ export default function Sidebar({
 
   return (
     <div className="sidebar">
+
+      {/* ── Header: title + collapse button ────────────────────────────── */}
       <div className="sidebar-header">
         <span className="sidebar-title">Middle Earth</span>
         <button className="sidebar-toggle" onClick={() => setCollapsed(true)} title="Collapse">
@@ -116,12 +146,13 @@ export default function Sidebar({
         </button>
       </div>
 
+      {/* ── User info: email + logout ───────────────────────────────────── */}
       <div className="sidebar-user">
         <span className="sidebar-email">{userEmail}</span>
         <button className="sidebar-logout" onClick={onLogout}>Logout</button>
       </div>
 
-      {/* Place Pin */}
+      {/* ── Place Pin section ───────────────────────────────────────────── */}
       <div className="sidebar-section">
         <button
           className={`btn-place-pin${placementMode ? ' active' : ''}`}
@@ -134,7 +165,7 @@ export default function Sidebar({
         )}
       </div>
 
-      {/* Measure Distance */}
+      {/* ── Measure Distance section ────────────────────────────────────── */}
       <div className="sidebar-section">
         <button
           className={`btn-place-pin${measureMode ? ' active' : ''}`}
@@ -143,12 +174,15 @@ export default function Sidebar({
           {measureMode ? '✕ Stop Measuring' : '↔ Measure Distance'}
         </button>
 
+        {/* Controls visible only while measure mode is active */}
         {measureMode && (
           <div className="measure-controls">
+            {/* No points yet: show instructions */}
             {activePath.length === 0 && (
               <p className="placement-hint">Click anywhere on the map to add points</p>
             )}
 
+            {/* Point count + running distance once at least 1 point exists */}
             {activePath.length >= 1 && (
               <div className="measure-status">
                 <span className="measure-point-count">
@@ -162,6 +196,7 @@ export default function Sidebar({
               </div>
             )}
 
+            {/* Undo + Clear buttons once at least 1 point exists */}
             {activePath.length >= 1 && (
               <div className="measure-actions">
                 <button className="btn-measure-action" onClick={onUndoPoint}>
@@ -173,6 +208,7 @@ export default function Sidebar({
               </div>
             )}
 
+            {/* Path name form: only shown once there are at least 2 points (a real path) */}
             {activePath.length >= 2 && (
               <form className="path-save-form" onSubmit={handleSavePathSubmit}>
                 <input
@@ -193,6 +229,7 @@ export default function Sidebar({
               </form>
             )}
 
+            {/* Warning when the user reaches the 100-point limit */}
             {activePath.length >= 100 && (
               <p className="placement-hint" style={{ color: '#cc7722' }}>
                 Maximum 100 points reached
@@ -202,7 +239,8 @@ export default function Sidebar({
         )}
       </div>
 
-      {/* Saved paths list */}
+      {/* ── Saved paths list ────────────────────────────────────────────── */}
+      {/* Only rendered when at least one path exists */}
       {savedPaths.length > 0 && (
         <div className="sidebar-section sidebar-paths">
           <h3>My Paths <span className="pin-count">({savedPaths.length})</span></h3>
@@ -221,6 +259,7 @@ export default function Sidebar({
                 </div>
                 <div className="path-item-sub">
                   <span className="path-item-points">{path.points?.length} pts</span>
+                  {/* stopPropagation prevents the delete click from also selecting the path */}
                   <button
                     className="btn-path-delete"
                     title="Delete path"
@@ -235,7 +274,8 @@ export default function Sidebar({
         </div>
       )}
 
-      {/* Pin form */}
+      {/* ── Pin form ────────────────────────────────────────────────────── */}
+      {/* Shown when placing a new pin (newPinPosition set) or editing one (selectedPin set) */}
       {showForm && (
         <div className="sidebar-section sidebar-form">
           <h3>{selectedPin ? 'Edit Pin' : 'New Pin'}</h3>
@@ -261,6 +301,7 @@ export default function Sidebar({
             />
             {error && <p className="form-error">{error}</p>}
             <div className="form-actions">
+              {/* Delete only shown when editing an existing pin (not when creating a new one) */}
               {selectedPin && (
                 <button type="button" className="btn-delete" onClick={handleDelete} disabled={saving}>
                   Delete
@@ -277,13 +318,15 @@ export default function Sidebar({
         </div>
       )}
 
-      {/* Location info */}
+      {/* ── Location info panel ─────────────────────────────────────────── */}
+      {/* Shown when an admin location is clicked; hidden when the pin form is open */}
       {selectedLocation && !showForm && (
         <div className="sidebar-section sidebar-location-info">
           <div className="location-info-header">
             <h3>{selectedLocation.name}</h3>
             <button className="btn-close-info" onClick={onLocationClose} title="Close">✕</button>
           </div>
+          {/* Definition list of lore metadata; fields are omitted if the location has no value for them */}
           <dl className="location-details">
             {selectedLocation.realm && (
               <><dt>Realm</dt><dd>{selectedLocation.realm}</dd></>
@@ -304,7 +347,8 @@ export default function Sidebar({
         </div>
       )}
 
-      {/* My Pins */}
+      {/* ── My Pins list ────────────────────────────────────────────────── */}
+      {/* Clicking a pin in this list selects it and opens the edit form */}
       <div className="sidebar-section sidebar-pins">
         <h3>My Pins <span className="pin-count">({pins.length})</span></h3>
         {pins.length === 0 ? (
@@ -326,6 +370,8 @@ export default function Sidebar({
         )}
       </div>
 
+      {/* ── Admin link ──────────────────────────────────────────────────── */}
+      {/* Only rendered when the logged-in user has app_metadata.role === 'admin' */}
       {isAdmin && (
         <div className="sidebar-section sidebar-admin-link">
           <Link to="/admin" className="btn-admin-panel">⚙ Admin Panel</Link>

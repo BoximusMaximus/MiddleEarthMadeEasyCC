@@ -1,6 +1,8 @@
+/* MapPage layout — side-by-side flex row that fills the entire viewport.
+   The sidebar has a fixed width; the map takes all remaining space. */
 .map-page {
   display: flex;
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
+  overflow: hidden; /* Prevents any scroll bars — the map handles its own panning */
 }

@@ -1,13 +1,21 @@
+/* ============================================================
+   PinModal — LEGACY styles for the old modal-overlay pin editor.
+   This component is no longer rendered by the app.
+   The current pin editor lives inline in Sidebar.jsx / Sidebar.css.
+   ============================================================ */
+
+/* Full-screen semi-transparent overlay — sits above everything at z-index 2000 */
 .pin-modal-overlay {
   position: fixed;
-  inset: 0;
+  inset: 0;             /* Shorthand for top/right/bottom/left: 0 */
   z-index: 2000;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.5); /* Dark backdrop behind the modal */
 }
 
+/* The modal card itself */
 .pin-modal {
   background: #120e05;
   border: 1px solid var(--ink-dark);
@@ -25,11 +33,14 @@
   margin-bottom: 1rem;
 }
 
+/* Vertically stacked form with even gaps between fields */
 .pin-modal form {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
 }
+
+/* ── Form inputs ──────────────────────────────────────────── */
 
 .pin-modal input,
 .pin-modal select,
@@ -56,11 +67,14 @@
   background: #1e1609;
 }
 
+/* Inline error displayed below the form fields */
 .modal-error {
   color: #e07070;
   font-size: 0.85rem;
   font-family: sans-serif;
 }
+
+/* ── Action buttons ─────────────────────────────────────────── */
 
 .modal-actions {
   display: flex;
@@ -79,6 +93,7 @@
   border: 1px solid transparent;
 }
 
+/* Save: gold-bordered, inverts on hover */
 .modal-actions button[type="submit"] {
   background: var(--ink-dark);
   border-color: var(--ink-gold);
@@ -90,6 +105,7 @@
   color: #120e05;
 }
 
+/* Cancel: neutral muted styling */
 .btn-cancel {
   background: transparent;
   border-color: #4a3510 !important;
@@ -101,6 +117,7 @@
   color: #a08050 !important;
 }
 
+/* Delete: red destructive styling, fixed width (doesn't flex-grow) */
 .btn-delete {
   background: transparent;
   border-color: #7a2020 !important;

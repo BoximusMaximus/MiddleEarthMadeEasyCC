@@ -1,3 +1,8 @@
+/* ============================================================
+   AdminPage — layout and styles for the admin location manager
+   ============================================================ */
+
+/* Full-viewport flex row: sidebar on the left, map fills the rest */
 .admin-page {
   display: flex;
   width: 100vw;
@@ -5,18 +10,21 @@
   overflow: hidden;
 }
 
+/* ── Admin sidebar ──────────────────────────────────────────── */
+
 .admin-sidebar {
   width: 300px;
-  flex-shrink: 0;
+  flex-shrink: 0;           /* Never shrink below 300px */
   background: #120e05;
   border-right: 1px solid #4a3510;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
+  overflow-y: auto;         /* Inner content scrolls if it overflows */
   z-index: 1000;
   color: #e8d5a3;
 }
 
+/* Header row: title + back-to-map link */
 .admin-header {
   display: flex;
   align-items: center;
@@ -33,6 +41,7 @@
   letter-spacing: 0.04em;
 }
 
+/* Link styled as a small button to go back to the main map */
 .btn-back-map {
   background: none;
   border: 1px solid #4a3510;
@@ -45,6 +54,7 @@
 }
 .btn-back-map:hover { border-color: var(--ink-gold); color: var(--ink-gold); }
 
+/* Each collapsible content area in the sidebar */
 .admin-section {
   padding: 0.75rem 1rem;
   border-bottom: 1px solid #2a1f0a;
@@ -57,6 +67,8 @@
   font-size: 0.9rem;
   margin-bottom: 0.5rem;
 }
+
+/* ── Place Location toggle button ───────────────────────────── */
 
 .btn-place-location {
   width: 100%;
@@ -71,12 +83,15 @@
   transition: background 0.15s, border-color 0.15s;
 }
 .btn-place-location:hover { background: #2a1f09; border-color: var(--ink-gold); }
+
+/* Active state: orange accent when placement mode is active */
 .btn-place-location.active {
   background: #2a1609;
   border-color: #cc7722;
   color: #e09040;
 }
 
+/* Helper text shown below the toggle when placement mode is active */
 .placement-hint {
   font-size: 0.76rem;
   color: #7a6040;
@@ -85,7 +100,8 @@
   line-height: 1.4;
 }
 
-/* Pre-fill from API */
+/* ── Pre-fill from API dropdown ─────────────────────────────── */
+
 .prefill-row {
   display: flex;
   flex-direction: column;
@@ -112,7 +128,8 @@
 .prefill-row select:focus { border-color: var(--ink-gold); }
 .prefill-row select option { background: #1e1609; }
 
-/* Location form */
+/* ── Location form fields ───────────────────────────────────── */
+
 .admin-form form {
   display: flex;
   flex-direction: column;
@@ -139,11 +156,14 @@
 .admin-form textarea:focus { border-color: var(--ink-gold); }
 .admin-form select option { background: #1e1609; }
 
+/* Inline error message from Supabase */
 .form-error {
   color: #e07070;
   font-size: 0.78rem;
   font-family: sans-serif;
 }
+
+/* ── Form action buttons (Save / Cancel / Delete) ───────────── */
 
 .form-actions {
   display: flex;
@@ -159,18 +179,24 @@
   transition: background 0.15s, color 0.15s, border-color 0.15s;
   border: 1px solid transparent;
 }
+
+/* Primary save action — gold border, inverts on hover */
 .btn-save {
   background: var(--ink-dark);
   border-color: var(--ink-gold) !important;
   color: var(--ink-gold);
 }
 .btn-save:hover:not(:disabled) { background: var(--ink-gold); color: #120e05; }
+
+/* Neutral cancel action */
 .btn-cancel {
   background: transparent;
   border-color: #4a3510 !important;
   color: #7a6040;
 }
 .btn-cancel:hover:not(:disabled) { border-color: #7a6040 !important; color: #a08050; }
+
+/* Destructive delete action — red, fixed width so it doesn't stretch */
 .btn-delete {
   background: transparent;
   border-color: #7a2020 !important;
@@ -178,9 +204,12 @@
   flex: 0 0 auto;
 }
 .btn-delete:hover:not(:disabled) { background: #7a2020; color: #ffaaaa; }
+
 .form-actions button:disabled { opacity: 0.5; cursor: not-allowed; }
 
-/* Locations list */
+/* ── Locations list ─────────────────────────────────────────── */
+
+/* flex: 1 lets this section fill remaining sidebar height and scroll internally */
 .admin-locations-list { flex: 1; overflow-y: auto; }
 
 .loc-count { color: #7a6040; font-size: 0.78rem; }
@@ -192,6 +221,7 @@
   line-height: 1.4;
 }
 
+/* Unstyled list of location rows */
 .location-list {
   list-style: none;
   padding: 0;
@@ -201,6 +231,7 @@
   gap: 0.25rem;
 }
 
+/* Individual location row — clickable, highlights on hover and when selected */
 .location-item {
   display: flex;
   align-items: center;
@@ -214,14 +245,16 @@
 .location-item:hover { background: #1e1609; border-color: #3a2a0a; }
 .location-item.selected { background: #1e1609; border-color: var(--ink-dark); }
 
+/* Small diamond icon representing the location's category color */
 .loc-dot {
   width: 10px;
   height: 10px;
-  transform: rotate(45deg);
+  transform: rotate(45deg); /* Square rotated 45° becomes a diamond */
   flex-shrink: 0;
   border: 1px solid rgba(0,0,0,0.4);
 }
 
+/* Location name — truncates with ellipsis if too long */
 .loc-item-name {
   flex: 1;
   font-family: sans-serif;
@@ -232,6 +265,7 @@
   white-space: nowrap;
 }
 
+/* Realm label on the right side of each row */
 .loc-item-realm {
   font-size: 0.7rem;
   color: #7a6040;
